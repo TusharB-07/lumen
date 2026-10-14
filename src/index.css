@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+@theme {
+  --font-atkinson: 'Atkinson Hyperlegible', 'Segoe UI', system-ui, sans-serif;
+  
+  --color-warm-white: #FAF8F5;
+  --color-warm-gray: #F0EDE8;
+  --color-text-primary: #2D2A26;
+  --color-text-secondary: #5C5650;
+  --color-accent: #4A6741;
+  --color-accent-light: #6B8F62;
+  --color-border: #D4CFC8;
+  --color-danger: #8B3A3A;
+  
+  --color-hc-bg: #000000;
+  --color-hc-text: #FFFFFF;
+  --color-hc-accent: #FFD700;
+  --color-hc-border: #FFFFFF;
+}
+
+:root {
+  --bg: var(--color-warm-white);
+  --bg-secondary: var(--color-warm-gray);
+  --text: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --accent: var(--color-accent);
+  --accent-light: var(--color-accent-light);
+  --border: var(--color-border);
+  --danger: var(--color-danger);
+}
+
+:root[data-theme="high-contrast"] {
+  --bg: var(--color-hc-bg);
+  --bg-secondary: #1a1a1a;
+  --text: var(--color-hc-text);
+  --text-secondary: #E0E0E0;
+  --accent: var(--color-hc-accent);
+  --accent-light: #FFE44D;
+  --border: var(--color-hc-border);
+  --danger: #FF6B6B;
+}
+
+body {
+  font-family: var(--font-atkinson);
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus visible styles for accessibility */
+*:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+:root[data-theme="high-contrast"] *:focus-visible {
+  outline-color: var(--color-hc-accent);
+  outline-width: 4px;
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip to content link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  background: var(--accent);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  z-index: 100;
+  font-size: 1rem;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Smooth transitions for theme changes */
+body {
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+/* Custom scrollbar for list view */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Kbd styling */
+kbd {
+  font-family: var(--font-atkinson);
+}
