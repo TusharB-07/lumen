@@ -16,8 +16,6 @@ interface TaskState {
   view: 'focus' | 'list';
   showShortcuts: boolean;
   isAdding: boolean;
-  isListening: boolean;
-  isVoiceMode: boolean;
 
   // Actions
   addTask: (text: string) => void;
@@ -31,8 +29,6 @@ interface TaskState {
   setView: (view: 'focus' | 'list') => void;
   toggleShortcuts: () => void;
   setIsAdding: (isAdding: boolean) => void;
-  setIsListening: (isListening: boolean) => void;
-  setIsVoiceMode: (isVoiceMode: boolean) => void;
   getCurrentTask: () => Task | null;
   getActiveTasks: () => Task[];
 }
@@ -69,20 +65,18 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   view: 'focus',
   showShortcuts: false,
   isAdding: false,
-  isListening: false,
-  isVoiceMode: false,
 
   addTask: (text: string) => {
     const trimmed = text.trim();
     if (!trimmed) return;
-    
+
     const newTask: Task = {
       id: crypto.randomUUID(),
       text: trimmed,
       completed: false,
       createdAt: Date.now(),
     };
-    
+
     set((state) => {
       const newTasks = [...state.tasks, newTask];
       saveToStorage('tasks', newTasks);
@@ -97,25 +91,23 @@ export const useTaskStore = create<TaskState>((set, get) => ({
           ? { ...task, completed: true, completedAt: Date.now() }
           : task
       );
-      
+
       const activeTasks = newTasks.filter((t) => !t.completed);
       const currentIndex = state.currentTaskIndex;
-      
-      // If the completed task was the current one, adjust index
+
       let newIndex = currentIndex;
       if (activeTasks.length === 0) {
         newIndex = 0;
       } else if (currentIndex >= activeTasks.length) {
         newIndex = activeTasks.length - 1;
       }
-      
+
       saveToStorage('tasks', newTasks);
       saveToStorage('currentTaskIndex', newIndex);
-      
-      return { 
-        tasks: newTasks, 
+
+      return {
+        tasks: newTasks,
         currentTaskIndex: newIndex,
-        // If no active tasks left, show list
         view: activeTasks.length === 0 ? 'list' : state.view,
       };
     });
@@ -125,9 +117,9 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     set((state) => {
       const taskIndex = state.tasks.findIndex((t) => t.id === id);
       const isActive = !state.tasks[taskIndex]?.completed;
-      
+
       const newTasks = state.tasks.filter((task) => task.id !== id);
-      
+
       let newIndex = state.currentTaskIndex;
       if (isActive) {
         const activeTasks = newTasks.filter((t) => !t.completed);
@@ -137,10 +129,10 @@ export const useTaskStore = create<TaskState>((set, get) => ({
           newIndex = activeTasks.length - 1;
         }
       }
-      
+
       saveToStorage('tasks', newTasks);
       saveToStorage('currentTaskIndex', newIndex);
-      
+
       return { tasks: newTasks, currentTaskIndex: newIndex };
     });
   },
@@ -192,14 +184,6 @@ export const useTaskStore = create<TaskState>((set, get) => ({
 
   setIsAdding: (isAdding: boolean) => {
     set({ isAdding });
-  },
-
-  setIsListening: (isListening: boolean) => {
-    set({ isListening });
-  },
-
-  setIsVoiceMode: (isVoiceMode: boolean) => {
-    set({ isVoiceMode });
   },
 
   getCurrentTask: () => {
