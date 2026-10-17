@@ -1,5 +1,4 @@
 import { useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useTaskStore } from '../store/taskStore';
 
 export function ListView() {
@@ -18,15 +17,9 @@ export function ListView() {
 
   if (view !== 'list') return null;
 
-  const shouldReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   return (
-    <motion.div
+    <div
       className="flex-1 px-4 py-8 max-w-2xl mx-auto w-full overflow-y-auto"
-      initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
-      animate={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
-      exit={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
-      transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
       role="region"
       aria-label="Task list"
     >
@@ -61,60 +54,54 @@ export function ListView() {
                 Active ({activeTasks.length})
               </h3>
               <ul ref={listRef} className="space-y-2" role="list" aria-label="Active tasks">
-                <AnimatePresence>
-                  {activeTasks.map((task, index) => (
-                    <motion.li
-                      key={task.id}
-                      ref={index === 0 ? firstItemRef : undefined}
-                      tabIndex={0}
-                      role="listitem"
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg border"
-                      style={{
-                        borderColor: 'var(--border)',
-                        backgroundColor: 'var(--bg-secondary)',
-                        minHeight: '44px',
-                      }}
-                      initial={shouldReduceMotion ? {} : { opacity: 0, x: -10 }}
-                      animate={shouldReduceMotion ? {} : { opacity: 1, x: 0 }}
-                      exit={shouldReduceMotion ? {} : { opacity: 0, x: 10 }}
-                      transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
-                      aria-label={`${task.text}. Press Space to complete, D to delete.`}
-                      onKeyDown={(e) => {
-                        if (e.key === ' ') {
-                          e.preventDefault();
-                          completeTask(task.id);
-                        } else if (e.key === 'd' || e.key === 'D') {
-                          e.preventDefault();
-                          deleteTask(task.id);
-                        } else if (e.key === 'Enter') {
-                          e.preventDefault();
-                          setCurrentTaskIndex(index);
-                          setView('focus');
-                        }
-                      }}
+                {activeTasks.map((task, index) => (
+                  <li
+                    key={task.id}
+                    ref={index === 0 ? firstItemRef : undefined}
+                    tabIndex={0}
+                    role="listitem"
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg border"
+                    style={{
+                      borderColor: 'var(--border)',
+                      backgroundColor: 'var(--bg-secondary)',
+                      minHeight: '44px',
+                    }}
+                    aria-label={`${task.text}. Press Space to complete, D to delete.`}
+                    onKeyDown={(e) => {
+                      if (e.key === ' ') {
+                        e.preventDefault();
+                        completeTask(task.id);
+                      } else if (e.key === 'd' || e.key === 'D') {
+                        e.preventDefault();
+                        deleteTask(task.id);
+                      } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        setCurrentTaskIndex(index);
+                        setView('focus');
+                      }
+                    }}
+                  >
+                    <button
+                      onClick={() => completeTask(task.id)}
+                      className="flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center"
+                      style={{ borderColor: 'var(--accent)', minWidth: '44px', minHeight: '44px' }}
+                      aria-label={`Complete task: ${task.text}`}
                     >
-                      <button
-                        onClick={() => completeTask(task.id)}
-                        className="flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center"
-                        style={{ borderColor: 'var(--accent)', minWidth: '44px', minHeight: '44px' }}
-                        aria-label={`Complete task: ${task.text}`}
-                      >
-                        <span style={{ color: 'var(--accent)' }}>○</span>
-                      </button>
-                      <span className="flex-1" style={{ fontSize: '16pt', color: 'var(--text)' }}>
-                        {task.text}
-                      </span>
-                      <button
-                        onClick={() => deleteTask(task.id)}
-                        className="flex-shrink-0 px-2 py-1 rounded text-sm"
-                        style={{ color: 'var(--danger)', minHeight: '44px', minWidth: '44px' }}
-                        aria-label={`Delete task: ${task.text}`}
-                      >
-                        ✕
-                      </button>
-                    </motion.li>
-                  ))}
-                </AnimatePresence>
+                      <span style={{ color: 'var(--accent)' }}>○</span>
+                    </button>
+                    <span className="flex-1" style={{ fontSize: '16pt', color: 'var(--text)' }}>
+                      {task.text}
+                    </span>
+                    <button
+                      onClick={() => deleteTask(task.id)}
+                      className="flex-shrink-0 px-2 py-1 rounded text-sm"
+                      style={{ color: 'var(--danger)', minHeight: '44px', minWidth: '44px' }}
+                      aria-label={`Delete task: ${task.text}`}
+                    >
+                      ✕
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
           )}
@@ -157,6 +144,6 @@ export function ListView() {
           )}
         </>
       )}
-    </motion.div>
+    </div>
   );
 }
