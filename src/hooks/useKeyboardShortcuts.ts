@@ -3,6 +3,7 @@ import { useTaskStore } from '../store/taskStore';
 
 export function useKeyboardShortcuts() {
   const {
+    addTask,
     completeTask,
     deleteTask,
     getCurrentTask,
@@ -14,6 +15,9 @@ export function useKeyboardShortcuts() {
     toggleTheme,
     setView,
     view,
+    toggleShortcuts,
+    showShortcuts,
+    isAdding,
     setIsAdding,
   } = useTaskStore();
 
@@ -22,11 +26,12 @@ export function useKeyboardShortcuts() {
       const target = e.target as HTMLElement;
       const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
 
-      if (isInput && e.key !== 'Escape') return;
+      if (isInput && !isAdding) return;
       if (isInput && e.key === 'Escape') {
-        useTaskStore.setState({ isAdding: false });
+        setIsAdding(false);
         return;
       }
+      if (isInput && e.key !== 'Escape') return;
 
       switch (e.key) {
         case 'n':
@@ -57,6 +62,10 @@ export function useKeyboardShortcuts() {
           e.preventDefault();
           setView(view === 'list' ? 'focus' : 'list');
           break;
+        case '?':
+          e.preventDefault();
+          toggleShortcuts();
+          break;
         case 'd':
         case 'D':
           e.preventDefault();
@@ -76,9 +85,16 @@ export function useKeyboardShortcuts() {
             setCurrentTaskIndex(currentTaskIndex - 1);
           }
           break;
+        case 'Escape':
+          if (showShortcuts) {
+            toggleShortcuts();
+          } else if (view === 'list') {
+            setView('focus');
+          }
+          break;
       }
     },
-    [completeTask, deleteTask, getCurrentTask, getActiveTasks, setCurrentTaskIndex, currentTaskIndex, increaseFontSize, decreaseFontSize, toggleTheme, setView, view, setIsAdding]
+    [addTask, completeTask, deleteTask, getCurrentTask, getActiveTasks, setCurrentTaskIndex, currentTaskIndex, increaseFontSize, decreaseFontSize, toggleTheme, setView, view, toggleShortcuts, showShortcuts, isAdding, setIsAdding]
   );
 
   useEffect(() => {
