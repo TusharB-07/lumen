@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { useTaskStore } from '../store/taskStore';
 
 const shortcuts = [
   { key: 'N', description: 'Add new task' },
+  { key: 'V', description: 'Voice add task' },
   { key: 'Space', description: 'Complete current task' },
   { key: 'D', description: 'Delete current task' },
   { key: ']', description: 'Increase text size' },
@@ -25,11 +27,17 @@ export function ShortcutOverlay() {
 
   if (!showShortcuts) return null;
 
+  const shouldReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   return (
-    <div
+    <motion.div
       ref={overlayRef}
       className="fixed inset-0 flex items-center justify-center px-4 z-50"
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+      initial={shouldReduceMotion ? {} : { opacity: 0 }}
+      animate={shouldReduceMotion ? {} : { opacity: 1 }}
+      exit={shouldReduceMotion ? {} : { opacity: 0 }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
       role="dialog"
       aria-modal="true"
       aria-label="Keyboard shortcuts"
@@ -41,12 +49,15 @@ export function ShortcutOverlay() {
         if (e.key === 'Escape') toggleShortcuts();
       }}
     >
-      <div
+      <motion.div
         className="w-full max-w-md p-6 rounded-xl border shadow-lg"
         style={{
           backgroundColor: 'var(--bg)',
           borderColor: 'var(--border)',
         }}
+        initial={shouldReduceMotion ? {} : { scale: 0.95, opacity: 0 }}
+        animate={shouldReduceMotion ? {} : { scale: 1, opacity: 1 }}
+        transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="font-bold" style={{ fontSize: '18pt', color: 'var(--text)' }}>
@@ -97,7 +108,7 @@ export function ShortcutOverlay() {
         <p className="mt-6 text-center text-sm" style={{ color: 'var(--text-secondary)' }}>
           Press <kbd className="px-2 py-0.5 rounded border" style={{ borderColor: 'var(--border)' }}>?</kbd> or Escape to close
         </p>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

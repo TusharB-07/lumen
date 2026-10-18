@@ -19,6 +19,7 @@ export function useKeyboardShortcuts() {
     showShortcuts,
     isAdding,
     setIsAdding,
+    setIsVoiceMode,
   } = useTaskStore();
 
   const handleKeyDown = useCallback(
@@ -37,6 +38,13 @@ export function useKeyboardShortcuts() {
         case 'n':
         case 'N':
           e.preventDefault();
+          setIsVoiceMode(false);
+          setIsAdding(true);
+          break;
+        case 'v':
+        case 'V':
+          e.preventDefault();
+          setIsVoiceMode(true);
           setIsAdding(true);
           break;
         case ' ':
@@ -94,7 +102,7 @@ export function useKeyboardShortcuts() {
           break;
       }
     },
-    [addTask, completeTask, deleteTask, getCurrentTask, getActiveTasks, setCurrentTaskIndex, currentTaskIndex, increaseFontSize, decreaseFontSize, toggleTheme, setView, view, toggleShortcuts, showShortcuts, isAdding, setIsAdding]
+    [addTask, completeTask, deleteTask, getCurrentTask, getActiveTasks, setCurrentTaskIndex, currentTaskIndex, increaseFontSize, decreaseFontSize, toggleTheme, setView, view, toggleShortcuts, showShortcuts, isAdding, setIsAdding, setIsVoiceMode]
   );
 
   useEffect(() => {

@@ -16,6 +16,8 @@ interface TaskState {
   view: 'focus' | 'list';
   showShortcuts: boolean;
   isAdding: boolean;
+  isListening: boolean;
+  isVoiceMode: boolean;
 
   // Actions
   addTask: (text: string) => void;
@@ -29,6 +31,8 @@ interface TaskState {
   setView: (view: 'focus' | 'list') => void;
   toggleShortcuts: () => void;
   setIsAdding: (isAdding: boolean) => void;
+  setIsListening: (isListening: boolean) => void;
+  setIsVoiceMode: (isVoiceMode: boolean) => void;
   getCurrentTask: () => Task | null;
   getActiveTasks: () => Task[];
 }
@@ -65,6 +69,8 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   view: 'focus',
   showShortcuts: false,
   isAdding: false,
+  isListening: false,
+  isVoiceMode: false,
 
   addTask: (text: string) => {
     const trimmed = text.trim();
@@ -184,6 +190,14 @@ export const useTaskStore = create<TaskState>((set, get) => ({
 
   setIsAdding: (isAdding: boolean) => {
     set({ isAdding });
+  },
+
+  setIsListening: (isListening: boolean) => {
+    set({ isListening });
+  },
+
+  setIsVoiceMode: (isVoiceMode: boolean) => {
+    set({ isVoiceMode });
   },
 
   getCurrentTask: () => {
