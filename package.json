@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "typecheck": "tsc --noEmit"
+    "preview": "vite preview",
+    "start": "vite preview --port 3000 --host",
+    "typecheck": "tsc --noEmit",
+    "lint:a11y": "node scripts/lint-a11y.cjs"
   },
   "dependencies": {
     "framer-motion": "^11.16.1",
