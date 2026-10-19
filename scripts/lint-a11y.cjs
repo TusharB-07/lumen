@@ -99,7 +99,7 @@ const checks = [
     id: 'input-labels',
     name: 'form inputs have associated labels',
     weight: 10,
-    pass: /<label\b|htmlFor=/.test(js),
+    pass: /<label\b|htmlFor=|htmlFor:/.test(js),
   },
   {
     id: 'landmarks',
